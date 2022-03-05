@@ -1,0 +1,19 @@
+{
+  "name": "loxjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "tap --ts"
+  },
+  "author": "Chidi Williams",
+  "license": "ISC",
+  "dependencies": {
+    "prettier": "^2.5.1",
+    "tap": "^15.2.2",
+    "ts-node": "^10.6.0"
+  },
+  "devDependencies": {
+    "@types/tap": "^15.0.6"
+  }
+}
