@@ -62,16 +62,25 @@ export class Parser {
   }
 
   private declaration(): Stmt {
-    if (this.match(TokenType.Class)) {
-      return this.classDeclaration();
+    try {
+      if (this.match(TokenType.Class)) {
+        return this.classDeclaration();
+      }
+      if (this.match(TokenType.Fun)) {
+        return this.function('function');
+      }
+      if (this.match(TokenType.Var)) {
+        return this.varDeclaration();
+      }
+      return this.statement();
+    } catch (error) {
+      if (error instanceof ParseError) {
+        this.synchronize();
+        this.hadError = true;
+        return {};
+      }
+      throw error;
     }
-    if (this.match(TokenType.Fun)) {
-      return this.function('function');
-    }
-    if (this.match(TokenType.Var)) {
-      return this.varDeclaration();
-    }
-    return this.statement();
   }
 
   private match(...tokenTypes: TokenType[]) {
@@ -85,7 +94,7 @@ export class Parser {
     return false;
   }
 
-  check(tokenType: TokenType) {
+  private check(tokenType: TokenType) {
     if (this.isAtEnd()) {
       return false;
     }
@@ -101,6 +110,30 @@ export class Parser {
 
   private previous() {
     return this.tokens[this.current - 1];
+  }
+
+  private synchronize() {
+    this.advance();
+    while (!this.isAtEnd()) {
+      if (this.previous().tokenType === TokenType.Semicolon) {
+        return;
+      }
+      switch (this.peek().tokenType) {
+        case (TokenType.Class,
+        TokenType.For,
+        TokenType.Fun,
+        TokenType.If,
+        TokenType.Print,
+        TokenType.Return,
+        TokenType.Var,
+        TokenType.While,
+        TokenType.Break,
+        TokenType.Continue):
+          return;
+        default:
+          this.advance();
+      }
+    }
   }
 
   private statement(): Stmt {
@@ -208,7 +241,7 @@ export class Parser {
     if (!condition) {
       condition = new LiteralExpr(true);
     }
-    body = new WhileStmt(body, condition);
+    body = new WhileStmt(condition, body);
 
     if (initializer) {
       body = new BlockStmt([initializer, body]);

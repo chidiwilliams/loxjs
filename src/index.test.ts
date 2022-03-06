@@ -18,7 +18,7 @@ const tests = [
     '',
   ],
 
-  // // unary, binary, and ternary operations
+  // unary, binary, and ternary operations
   ['arithmetic operations', 'print -1 + 2 * 3 - 4 / 5;', '4.2\n', ''],
   ['decimal arithmetic', 'print 1.234 / 5.678;', '0.2173300457907714\n', ''],
   ['logical operations', 'print (!true or false) and false;', 'false\n', ''],
@@ -30,12 +30,12 @@ const tests = [
   ['not equal to', 'print 4 != 5 ? 5 != 5 : true;', 'false\n', ''],
   ['comma', 'print (1, 2);', '2\n', ''],
 
-  // // variables
+  // variables
   ['variable declaration', 'var a = 10; print a*2;', '20\n', ''],
   ['variable assignment after declaration', 'var a; a = 20; print a*2;', '40\n', ''],
   ['variable re-assignment', 'var a = 10; print a; a = 20; print a*2;', '10\n40\n', ''],
 
-  // // block scoping
+  // block scoping
   [
     'block scoping',
     `var a = "global a";
@@ -372,8 +372,8 @@ tests.forEach((test) => {
     );
     runner.run(test[1]);
 
-    // t.equal(stdOut.toString(), test.stdOut);
-    // t.equal(stdErr.toString(), test.stdErr);
+    t.equal(stdOut.toString(), test[2]);
+    t.equal(stdErr.toString(), test[3]);
     t.end();
   });
 });
