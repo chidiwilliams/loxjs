@@ -1,4 +1,3 @@
-import { Writer } from '.';
 import {
   AssignExpr,
   BinaryExpr,
@@ -29,6 +28,7 @@ import {
   WhileStmt,
 } from './ast';
 import { Token, TokenType } from './token';
+import { Writer } from './writer';
 
 class ParseError extends Error {
   constructor(message: string) {

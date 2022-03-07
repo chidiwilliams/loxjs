@@ -2,30 +2,33 @@ import { Interpreter } from './interpreter';
 import { Parser } from './parser';
 import { Resolver } from './resolver';
 import { Scanner } from './scanner';
-
-export interface Writer {
-  write: (str: string) => void;
-}
+import { Writer } from './writer';
 
 export class Runner {
-  private interpreter = new Interpreter();
+  private interpreter: Interpreter;
 
-  constructor(private stdOut: Writer, private stdErr: Writer) {}
+  constructor(private stdOut: Writer, private stdErr: Writer) {
+    this.interpreter = new Interpreter(stdOut, stdErr);
+  }
 
   run(source: string) {
     const scanner = new Scanner(source, this.stdErr);
     const tokens = scanner.scanTokens();
 
     const parser = new Parser(tokens, this.stdErr);
-    const { statements, hadError } = parser.parse();
+    let { statements, hadError } = parser.parse();
 
     if (hadError) {
       return;
     }
 
     const resolver = new Resolver(this.interpreter, this.stdErr);
-    resolver.resolveStmts(statements);
+    hadError = resolver.resolveStmts(statements);
 
-    // console.log(statements, hadError);
+    if (hadError) {
+      return;
+    }
+
+    return this.interpreter.interpret(statements);
   }
 }

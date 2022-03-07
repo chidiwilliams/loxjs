@@ -1,5 +1,17 @@
 import t from 'tap';
-import { Runner } from './index';
+import { Runner } from './runner';
+
+class StringBuilder {
+  private lines: string[] = [];
+
+  writeLn(line: string) {
+    this.lines.push(line + '\n');
+  }
+
+  toString(): string {
+    return this.lines.join('');
+  }
+}
 
 const tests = [
   ['string', 'print "hello world";', 'hello world\n', ''],
@@ -196,7 +208,7 @@ const tests = [
   }
   sayHello("only first");`,
     '',
-    'Expected 2 arguments but got 1.\n[line 3]',
+    'Expected 2 arguments but got 1.\n[line 3]\n',
   ],
 
   // Variable scoping
@@ -363,12 +375,12 @@ const tests = [
 tests.forEach((test) => {
   t.test(test[0], (t) => {
     t.setTimeout(0);
-    const stdOut = Buffer.from('');
-    const stdErr = Buffer.from('');
+    const stdOut = new StringBuilder();
+    const stdErr = new StringBuilder();
 
     const runner = new Runner(
-      { write: (msg) => stdOut.write(msg) },
-      { write: (msg) => stdErr.write(msg) },
+      { writeLn: (msg) => stdOut.writeLn(msg) },
+      { writeLn: (msg) => stdErr.writeLn(msg) },
     );
     runner.run(test[1]);
 

@@ -1,4 +1,3 @@
-import { Writer } from '.';
 import {
   AssignExpr,
   BinaryExpr,
@@ -29,67 +28,10 @@ import {
   WhileStmt,
 } from './ast';
 import { Interpreter } from './interpreter';
+import { Scope } from './scope';
+import { Stack } from './stack';
 import { Token, TokenType } from './token';
-
-interface ScopeVar {
-  token?: Token;
-  defined: boolean;
-  used: boolean;
-}
-
-class Scope {
-  private values = new Map<string, ScopeVar>();
-
-  declare(name: string, token: Token) {
-    this.values.set(name, { token, defined: false, used: false });
-  }
-
-  define(name: string) {
-    this.values.get(name)!.defined = true;
-  }
-
-  has(name: string) {
-    const val = this.values.get(name);
-    const declared = val !== undefined;
-    return { declared: declared, defined: declared && val.defined };
-  }
-
-  use(name: string) {
-    this.values.get(name)!.used = true;
-  }
-
-  set(name: string) {
-    this.values.set(name, { defined: true, used: true });
-  }
-
-  entries() {
-    return this.values.entries();
-  }
-}
-
-class Stack<T> {
-  private values: T[] = [];
-
-  peek() {
-    return this.values[this.values.length - 1];
-  }
-
-  push(item: T) {
-    this.values.push(item);
-  }
-
-  pop() {
-    this.values.pop();
-  }
-
-  length() {
-    return this.values.length;
-  }
-
-  get(i: number) {
-    return this.values[i];
-  }
-}
+import { Writer } from './writer';
 
 enum FunctionType {
   None = 'None',
@@ -341,7 +283,7 @@ export class Resolver {
     const scope = this.scopes.peek();
     const { defined } = scope.has(name.lexeme);
     if (defined) {
-      this.error(name, 'Already a variable with this name in this scope.');
+      this.error(name, 'Already a variable with this name in this scope');
     }
     scope.declare(name.lexeme, name);
   }
@@ -355,7 +297,8 @@ export class Resolver {
 
   private error(token: Token, message: string) {
     const where = token.tokenType === TokenType.Eof ? ' at end' : ` at '${token.lexeme}'`;
-    this.stdErr.write(`[line ${token}] Error${where}: ${message}`);
+    this.stdErr.writeLn(`[line ${token.line}] Error${where}: ${message}`);
+    this.hadError = true;
   }
 
   private beginScope() {
@@ -366,7 +309,7 @@ export class Resolver {
     const scope = this.scopes.peek();
     for (const [name, value] of scope.entries()) {
       if (!value.used) {
-        this.error(value.token!, `Variable ${name} declared but not used.`);
+        this.error(value.token!, `Variable '${name}' declared but not used.`);
       }
     }
     this.scopes.pop();

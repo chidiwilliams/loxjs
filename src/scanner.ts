@@ -1,5 +1,5 @@
-import { Writer } from '.';
 import { Token, TokenType } from './token';
+import { Writer } from './writer';
 
 export class Scanner {
   private static keywords: Record<string, TokenType> = {
@@ -192,7 +192,7 @@ export class Scanner {
   }
 
   private error(message: string) {
-    this.stdErr.write(`[line ${this.line}] Error: ${message}`);
+    this.stdErr.writeLn(`[line ${this.line}] Error: ${message}`);
   }
 
   private isDigit(char: string): boolean {
