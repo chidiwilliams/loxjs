@@ -374,7 +374,6 @@ const tests = [
 
 tests.forEach((test) => {
   t.test(test[0], (t) => {
-    t.setTimeout(0);
     const stdOut = new StringBuilder();
     const stdErr = new StringBuilder();
 
