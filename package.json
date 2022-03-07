@@ -1,19 +1,24 @@
 {
   "name": "loxjs",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Lox interpreter",
+  "main": "dist/runner.js",
+  "types": "dist/runner.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
-    "test": "tap --ts"
+    "build": "tsc",
+    "test": "tap --ts",
+    "prepare": "npm run build",
+    "postversion": "git push && git push --tags"
   },
   "author": "Chidi Williams",
   "license": "ISC",
-  "dependencies": {
+  "devDependencies": {
+    "@types/tap": "^15.0.6",
     "prettier": "^2.5.1",
     "tap": "^15.2.2",
     "ts-node": "^10.6.0"
-  },
-  "devDependencies": {
-    "@types/tap": "^15.0.6"
   }
 }
