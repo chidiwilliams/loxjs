@@ -54,7 +54,7 @@ export class Interpreter {
     this.locals.set(expr, depth);
   }
 
-  interpret(statements: Stmt[]) {
+  interpret(statements: Stmt[]): any {
     try {
       let result: any;
       statements.forEach((stmt) => {

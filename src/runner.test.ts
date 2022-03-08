@@ -29,6 +29,7 @@ const tests = [
     '2\n',
     '',
   ],
+  ['line ending without semi-colon', 'print', '', '[line 0] Error at end: Expect expression.\n'],
 
   // unary, binary, and ternary operations
   ['arithmetic operations', 'print -1 + 2 * 3 - 4 / 5;', '4.2\n', ''],

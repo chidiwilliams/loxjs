@@ -34,6 +34,10 @@ class ParseError extends Error {
   constructor(message: string) {
     super(message);
   }
+
+  public toString() {
+    return this.message;
+  }
 }
 
 export class Parser {
@@ -75,6 +79,7 @@ export class Parser {
       return this.statement();
     } catch (error) {
       if (error instanceof ParseError) {
+        this.stdErr.writeLn(error.toString());
         this.synchronize();
         this.hadError = true;
         return {};
