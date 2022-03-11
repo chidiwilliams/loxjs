@@ -78,6 +78,13 @@ export class Interpreter {
     }
   }
 
+  stringify(value: any) {
+    if (value === null || value === undefined) {
+      return 'nil';
+    }
+    return value.toString();
+  }
+
   private execute(stmt: Stmt): any {
     if (stmt instanceof PrintStmt) {
       const value = this.evaluate(stmt.expr);
@@ -353,13 +360,6 @@ export class Interpreter {
       return val;
     }
     return true;
-  }
-
-  private stringify(value: any) {
-    if (value === null || value === undefined) {
-      return 'nil';
-    }
-    return value.toString();
   }
 
   private checkNumberOperands(operator: Token, left: any, right: any) {
