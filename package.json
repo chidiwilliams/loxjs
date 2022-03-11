@@ -1,6 +1,6 @@
 {
   "name": "@chidiwilliams/loxjs",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Lox interpreter",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
