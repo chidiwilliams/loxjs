@@ -1,6 +1,6 @@
 # loxjs
 
-An implementation of the tree-walking interpreter in Crafting Interpreters written in ~~Java~~TypeScript.
+An implementation of the tree-walking interpreter in Crafting Interpreters written in Type~~Java~~Script.
 
 **See also:**
 
